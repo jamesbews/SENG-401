@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post))
+{
+<h1>SENG 401 Assignment 3</h1>
+    <p class="lead">Enter the URL you wish to shorten:</p>
+    <input type="url" name="URL" id="URL" />
+    <input type="submit" value="Shorten" />
+    <p>Shortened URL:</p>
+    <h2>@ViewBag.MyMessage</h2>
+}
+</div>
+
+
