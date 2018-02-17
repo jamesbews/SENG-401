@@ -24,11 +24,15 @@ namespace LinkShortener.Models.Database
 
         public string saveReview(string url)
         {
-            string Url = url;
-            if (url.Contains("\"review\":")) {
-                Url = url.Substring(10, url.Length - 11);
+            string body = url;
+            string remove = "\"review\":";
+            if (body.Contains(remove))
+            {
+                body = url.Substring(remove.Length + 1, url.Length - (remove.Length + 2));
             }
-            dynamic data = JObject.Parse(Url);
+
+
+            dynamic data = JObject.Parse(body);
 
             string query = @"INSERT INTO " + dbname + ".Reviews(companyName, username, review, stars, timestamp)" +
                 @"VALUES('" + data.companyName + @"','" + data.username + @"','" + data.review + @"','" + data.stars + @"','" +

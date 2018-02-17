@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using LinkShortener.Models.Database;
 using System.ServiceModel.Web;
+using System.IO;
 
 namespace LinkShortener_Group14.Controllers
 {
@@ -43,14 +44,19 @@ namespace LinkShortener_Group14.Controllers
 
         ///[HttpGet]
         //[Route("Home/SaveCompanyReview/{id?}")]
-        [WebGet(UriTemplate = "/SaveCompanyReview/{id}")]
-        public ActionResult SaveCompanyReview(string id)
+        //[WebGet(UriTemplate = "/SaveCompanyReview/{id}")]
+        [HttpPost]
+        public ActionResult SaveCompanyReview(int? id)
         {
+            Stream req = Request.InputStream;
+            req.Seek(0, System.IO.SeekOrigin.Begin);
+            string json = new StreamReader(req).ReadToEnd();
+            
             LinkDatabase database = LinkDatabase.getInstance(); //Creates DB instance
+            
+            database.saveReview(json);
 
-            database.saveReview(id);
-
-            ViewBag.Json = "success";
+            ViewBag.Json = "{\"Request\":\"Success\"}";
 
             return View();
         }
