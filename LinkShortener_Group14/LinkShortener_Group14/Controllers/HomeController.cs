@@ -42,9 +42,7 @@ namespace LinkShortener_Group14.Controllers
             return new RedirectResult(resultLong); //Redirects user to intended page
         }
 
-        ///[HttpGet]
-        //[Route("Home/SaveCompanyReview/{id?}")]
-        //[WebGet(UriTemplate = "/SaveCompanyReview/{id}")]
+
         [HttpPost]
         public ActionResult SaveCompanyReview(int? id)
         {
