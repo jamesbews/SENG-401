@@ -36,7 +36,7 @@ namespace LinkShortener.Models.Database
 
             string query = @"INSERT INTO " + dbname + ".Reviews(companyName, username, review, stars, timestamp)" +
                 @"VALUES('" + data.companyName + @"','" + data.username + @"','" + data.review + @"','" + data.stars + @"','" +
-                   data.timestamp + @"')";
+                   data.timestamp + @"');";
 
             if (openConnection() == true)
             {
@@ -180,11 +180,11 @@ namespace LinkShortener.Models.Database
                         }, false
                     )
                 }
-            ), new Table(dbname, "Reviews", new Column[] {new Column ("id", "INT(64)", new string[] { "NOT NULL", "UNIQUE", "AUTO INCREMENT"}, true),
+            ), new Table(dbname, "Reviews", new Column[] {new Column ("id", "INT(64)", new string[] { "NOT NULL", "UNIQUE", "AUTO_INCREMENT"}, true),
                                                            new Column ("companyName", "VARCHAR(300)", new string[] { "NOT NULL" }, false),
                                                            new Column ("username", "VARCHAR(300)", new string[] { "NOT NULL"}, false),
                                                            new Column ("review", "VARCHAR(400)", new string[] { "NOT NULL"}, false),
-                                                           new Column ("star", "VARCHAR(300)", new string[] { "NOT NULL"}, false),
+                                                           new Column ("stars", "VARCHAR(300)", new string[] { "NOT NULL"}, false),
                                                            new Column ("timestamp", "VARCHAR(300)", new string[] { "NOT NULL"}, false)
             })
         };

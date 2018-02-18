@@ -18,7 +18,7 @@ namespace LinkShortener_Group14.Controllers
             LinkDatabase dataBase = LinkDatabase.getInstance(); //Create DB instance
             string key = dataBase.saveLongURL(URL); //Saves long URL to DB and returns ID key
 
-            string valueShort = "35.193.100.24/home/about?id=" + key; //Appends key returned from DB to shortened URL
+            string valueShort = "localhost/home/about?id=" + key; //Appends key returned from DB to shortened URL
             ViewBag.MyMessage = valueShort; //Places shortened URL in view bag to be dislayed in view
 
 
