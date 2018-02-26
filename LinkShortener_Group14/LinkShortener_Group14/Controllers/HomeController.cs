@@ -59,8 +59,13 @@ namespace LinkShortener_Group14.Controllers
             return View();
         }
 
-        public ActionResult GetCompanyReview()
+        [WebGet(UriTemplate = "/GetCompanyReview/{id}")]
+        public ActionResult GetCompanyReview(string id)
         {
+
+            LinkDatabase database = LinkDatabase.getInstance();
+
+            database.getReview();
 
             return View();
         }

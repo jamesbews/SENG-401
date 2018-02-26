@@ -25,10 +25,10 @@ namespace LinkShortener.Models.Database
         public string saveReview(string url)
         {
             string body = url;
-            string remove = "\"review\":";
+            string remove = "\"review\":{";
             if (body.Contains(remove))
             {
-                body = url.Substring(remove.Length + 1, url.Length - (remove.Length + 2));
+                body = url.Substring(remove.Length, url.Length - (remove.Length + 1));
             }
 
 
@@ -65,7 +65,45 @@ namespace LinkShortener.Models.Database
             }
         }
 
-   
+        public string getReview(string request)
+        {
+            dynamic data = JObject.Parse(request);
+
+            string query = "SELECT * FROM " + dbname + ".Reviews WHERE companyName = " + data.companyName + ";";
+
+            if (openConnection() == true)
+            {
+                MySqlCommand command = new MySqlCommand(query, connection);
+                MySqlDataReader reader = command.ExecuteReader();
+
+                while(reader.Read() == true)
+                {
+                   // string row = reader.GetString(1)
+                }
+                
+
+
+                if (reader.Read() == true)
+                {
+                    string response = reader.GetString(".Review");
+                    reader.Close();
+                    closeConnection();
+                    return response;
+
+                }
+                else
+                {
+                    //Throw an exception indicating no result was found
+                    throw new ArgumentException("No url in the database matches that id.");
+                }
+            }
+            else
+            {
+                throw new Exception("Could not connect to database.");
+            }
+
+            return "yo";
+        }
         
 
 
