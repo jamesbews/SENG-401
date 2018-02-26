@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace LinkShortener.Models.Database
 {
@@ -65,44 +66,61 @@ namespace LinkShortener.Models.Database
             }
         }
 
+        /// <summary>
+        /// Class for the serialization and deserialization of JSON data.
+        /// </summary>
+        private class CompanyReviewClass
+        {
+            public string companyName;
+            public string username;
+            public string review;
+            public string stars;
+            public string timestamp;
+        }
+
+        /// <summary>
+        /// Method To get a review from the database.
+        /// </summary>
+        /// <param name="request">the url fed string representing the company name</param>
+        /// <returns>a series of json objects that </returns>
         public string getReview(string request)
         {
             dynamic data = JObject.Parse(request);
-
+            string output = "";
+            int count = 0;
             string query = "SELECT * FROM " + dbname + ".Reviews WHERE companyName = " + data.companyName + ";";
-
             if (openConnection() == true)
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 MySqlDataReader reader = command.ExecuteReader();
-
+                CompanyReviewClass CRC;
                 while(reader.Read() == true)
                 {
-                   // string row = reader.GetString(1)
+                    CRC = new CompanyReviewClass();
+                    CRC.companyName = reader["companyName"].ToString();
+                    CRC.username = reader["username"].ToString();
+                    CRC.review = reader["review"].ToString();
+                    CRC.stars = reader["stars"].ToString();
+                    CRC.timestamp = reader["timestamp"].ToString();
+                    output = output + JsonConvert.SerializeObject(CRC);
+                    count++;
                 }
-                
-
-
-                if (reader.Read() == true)
-                {
-                    string response = reader.GetString(".Review");
-                    reader.Close();
-                    closeConnection();
-                    return response;
-
-                }
-                else
+                if(count < 0)
                 {
                     //Throw an exception indicating no result was found
                     throw new ArgumentException("No url in the database matches that id.");
+                }
+                else
+                {
+                    reader.Close();
+                    closeConnection();
                 }
             }
             else
             {
                 throw new Exception("Could not connect to database.");
             }
-
-            return "yo";
+            return output;
         }
         
 
