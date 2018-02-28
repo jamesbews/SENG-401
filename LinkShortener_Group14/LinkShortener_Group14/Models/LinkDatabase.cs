@@ -27,6 +27,7 @@ namespace LinkShortener.Models.Database
         {
             string body = url;
             string remove = "\"review\":{";
+            string query = "";
             if (body.Contains(remove))
             {
                 body = url.Substring(remove.Length, url.Length - (remove.Length + 1));
@@ -35,9 +36,13 @@ namespace LinkShortener.Models.Database
 
             dynamic data = JObject.Parse(body);
 
-            string query = @"INSERT INTO " + dbname + ".Reviews(companyName, username, review, stars, timestamp)" +
-                @"VALUES('" + data.companyName + @"','" + data.username + @"','" + data.review + @"','" + data.stars + @"','" +
-                   data.timestamp + @"');";
+            if (data.companyName == "" || data.username == null || data.review == null || data.review == null || data.stars == null || data.timestamp == null)
+            {
+                return "{\"response\":\"Invalid Json\"}";
+            }
+                query = @"INSERT INTO " + dbname + ".Reviews(companyName, username, review, stars, timestamp)" +
+                    @"VALUES('" + data.companyName + @"','" + data.username + @"','" + data.review + @"','" + data.stars + @"','" +
+                       data.timestamp + @"');";
 
             if (openConnection() == true)
             {
@@ -86,9 +91,9 @@ namespace LinkShortener.Models.Database
         public string getReview(string request)
         {
             dynamic data = JObject.Parse(request);
-            string output = "";
+            string output = "{\"response\":\"Success\",\"reviews\":[";
             int count = 0;
-            string query = "SELECT * FROM " + dbname + ".Reviews WHERE companyName = " + data.companyName + ";";
+            string query = "SELECT * FROM " + dbname + ".Reviews WHERE companyname = '" + data.companyName + "';";
             if (openConnection() == true)
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
@@ -97,18 +102,25 @@ namespace LinkShortener.Models.Database
                 while(reader.Read() == true)
                 {
                     CRC = new CompanyReviewClass();
-                    CRC.companyName = reader["companyName"].ToString();
+                    CRC.companyName = reader["companyname"].ToString();
                     CRC.username = reader["username"].ToString();
                     CRC.review = reader["review"].ToString();
                     CRC.stars = reader["stars"].ToString();
                     CRC.timestamp = reader["timestamp"].ToString();
-                    output = output + JsonConvert.SerializeObject(CRC);
+                    if(count > 0)
+                    {
+                        output = output + "," + JsonConvert.SerializeObject(CRC);
+                    } else
+                    {
+                        output = output + JsonConvert.SerializeObject(CRC);
+                    }
+                    
                     count++;
                 }
-                if(count < 0)
+                if(count <= 0)
                 {
-                    //Throw an exception indicating no result was found
-                    throw new ArgumentException("No url in the database matches that id.");
+                    //no result was found                    
+                    return "{\"response\":\"Failed\"}";
                 }
                 else
                 {
@@ -120,6 +132,7 @@ namespace LinkShortener.Models.Database
             {
                 throw new Exception("Could not connect to database.");
             }
+            output = output + "]}";
             return output;
         }
         

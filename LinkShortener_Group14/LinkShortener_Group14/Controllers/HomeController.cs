@@ -65,7 +65,7 @@ namespace LinkShortener_Group14.Controllers
 
             LinkDatabase database = LinkDatabase.getInstance();
 
-            database.getReview();
+           ViewBag.Json = database.getReview(id);
 
             return View();
         }
