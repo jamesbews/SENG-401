@@ -36,7 +36,7 @@ namespace LinkShortener.Models.Database
 
             dynamic data = JObject.Parse(body);
 
-            if (data.companyName == "" || data.username == null || data.review == null || data.review == null || data.stars == null || data.timestamp == null)
+            if (data.companyName == null || data.username == null || data.review == null || data.review == null || data.stars == null || data.timestamp == null)
             {
                 return "{\"response\":\"Invalid Json\"}";
             }
