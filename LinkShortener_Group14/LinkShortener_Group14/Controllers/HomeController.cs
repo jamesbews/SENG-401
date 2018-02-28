@@ -51,10 +51,8 @@ namespace LinkShortener_Group14.Controllers
             string json = new StreamReader(req).ReadToEnd();
             
             LinkDatabase database = LinkDatabase.getInstance(); //Creates DB instance
-            
-            database.saveReview(json);
 
-            ViewBag.Json = "{\"Request\":\"Success\"}";
+            ViewBag.Json = database.saveReview(json);
 
             return View();
         }
