@@ -90,7 +90,15 @@ namespace LinkShortener.Models.Database
         /// <returns>a series of json objects that </returns>
         public string getReview(string request)
         {
-            dynamic data = JObject.Parse(request);
+            dynamic data;
+
+            try
+            {
+                data = JObject.Parse(request);
+            } catch (Exception e)
+            {
+                return "{\"response\":\"Invalid JSon\"}";
+            }
             string output = "{\"response\":\"Success\",\"reviews\":[";
             int count = 0;
             string query = "SELECT * FROM " + dbname + ".Reviews WHERE companyname = '" + data.companyName + "';";
@@ -119,7 +127,9 @@ namespace LinkShortener.Models.Database
                 }
                 if(count <= 0)
                 {
-                    //no result was found                    
+                    //no result was found
+                    reader.Close();
+                    closeConnection();
                     return "{\"response\":\"Failed\"}";
                 }
                 else
