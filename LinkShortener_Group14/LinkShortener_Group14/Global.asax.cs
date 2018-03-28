@@ -17,5 +17,14 @@ namespace LinkShortener_Group14
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
+        public void Session_OnStart()
+        {
+
+            string ip = HttpContext.Current.Request.Url.AbsoluteUri;
+            string[] temp = ip.Split('/');
+            ip = temp[2];
+            HttpContext.Current.Session.Add("ip", ip);
+        }
     }
 }

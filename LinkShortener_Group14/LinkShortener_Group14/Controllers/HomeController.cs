@@ -6,6 +6,10 @@ using System.Web.Mvc;
 using LinkShortener.Models.Database;
 using System.ServiceModel.Web;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using LinkShortener_Group14.Models;
+
 
 namespace LinkShortener_Group14.Controllers
 {
@@ -18,7 +22,9 @@ namespace LinkShortener_Group14.Controllers
             LinkDatabase dataBase = LinkDatabase.getInstance(); //Create DB instance
             string key = dataBase.saveLongURL(URL); //Saves long URL to DB and returns ID key
 
-            string valueShort = "35.193.100.24/home/about?id=" + key; //Appends key returned from DB to shortened URL
+           
+
+            string valueShort = Globals.getIp() + "/home/about?id=" + key; //Appends key returned from DB to shortened URL
             ViewBag.MyMessage = valueShort; //Places shortened URL in view bag to be dislayed in view
 
 
@@ -65,7 +71,7 @@ namespace LinkShortener_Group14.Controllers
 
            ViewBag.Json = database.getReview(id);
 
-            return View();
+            return Json(database.getReview(id));
         }
     }
 }
